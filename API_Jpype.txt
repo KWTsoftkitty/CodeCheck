@@ -1,0 +1,48 @@
+# -*-coding:utf-8-*-
+
+# import jpype
+#
+# jvmPath = jpype.getDefaultJVMPath()  # 默认 JVM 路径
+# jpype.startJVM(jvmPath)  # start
+# jpype.java.lang.System.out.println("hello world!")  # 执行 hello word!
+# jpype.shutdownJVM()  # end
+
+from jpype import startJVM, getDefaultJVMPath, java, shutdownJVM
+from jpype import JClass, JPackage
+
+def test_jpype():
+    startJVM(getDefaultJVMPath())
+
+    """
+        调用java函数
+    """
+    print '--------java output--------'
+    java.lang.System.out.println('hello word!')  # 直接输出
+
+    """
+        调用main函数
+    """
+    print '---------main output--------'
+    JavaTest = JClass('Test')  # 外部函数
+    JavaTest.main([])
+
+    """
+        调用辅助的class
+    """
+    print '---------class output---------'
+    JavaHello = JClass('JavaHello')
+    JavaHello.hello([])  # class中的方法，自带输出
+    j = JavaHello()
+    j.speak('hello world...')  # class中的方法，不带输出
+
+    """
+        调用包
+    """
+    print '----------packege output-------------'
+    Pkg = JPackage('java.lang')
+    Pkg.System.out.println('hello world!')
+
+    shutdownJVM()
+
+if __name__ == '__main__':
+    test_jpype()
